@@ -1,0 +1,29 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// Handles the required Guest Login sessions
+model User {
+  id        String   @id @default(uuid())
+  username  String   @unique
+  role      String   @default("guest")
+  createdAt DateTime @default(now())
+}
+
+// Maps directly to the Caseload table shown in the Figma design
+model Task {
+  id            String    @id @default(uuid())
+  fullName      String
+  lastName      String
+  iepDue        DateTime?
+  evalDue       DateTime?
+  collaborators String?   
+  serviceTime   String?
+  school        String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
