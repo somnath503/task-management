@@ -1,22 +1,45 @@
 @import "tailwindcss";
 
+/* 1. Default Light Mode Variables */
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  --bg-base: #ffffff;
+  --bg-sidebar: #fafafa;
+  --bg-card: #ffffff;
+  --border-base: #e5e5e5;
+  --text-main: #111827;
+  --text-muted: #6b7280;
 }
 
+/* 2. Dark Mode Variables (Triggered by next-themes) */
+.dark {
+  --background: #1e1f2b;
+  --foreground: #f9fafb;
+  
+  --bg-base: #1e1f2b;
+  --bg-sidebar: #2a2c3d;
+  --bg-card: #2a2c3d;
+  --border-base: #374151;
+  --text-main: #f9fafb;
+  --text-muted: #9ca3af;
+}
+
+/* 3. Tell Tailwind v4 to create utility classes for these colors */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  
+  /* This creates classes like bg-theme-base, text-theme-muted, border-theme-border */
+  --color-theme-base: var(--bg-base);
+  --color-theme-sidebar: var(--bg-sidebar);
+  --color-theme-card: var(--bg-card);
+  --color-theme-border: var(--border-base);
+  --color-theme-text: var(--text-main);
+  --color-theme-muted: var(--text-muted);
 }
 
 body {
