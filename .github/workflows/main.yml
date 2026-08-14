@@ -62,3 +62,4 @@ jobs:
 
     - name: Build Frontend
       run: npm run build
+

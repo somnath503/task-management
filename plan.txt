@@ -20,3 +20,8 @@ Phase 4: Polish & DeliveryStep
 4.1: Conduct rigorous responsive design testing across desktop, tablet, and mobile. 
 4.2: Complete Part 2 (Product Understanding and UX/UI improvements document).
 4.3: Deploy the backend and frontend.
+
+
+
+
+now lets build settings and profile apge and theme and color page and also there add back button as when i am choose color or  so from there no back option use refresh to back and then again open setting so fixed this  and make funcitonal like email name title and when any one use mail or name use there anme and also funcitonal color and make an professional profile and also in profile  no need to uplaod image use name and color make an profile animated dp and also mak epage responsive and good not like static 

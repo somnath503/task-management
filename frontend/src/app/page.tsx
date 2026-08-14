@@ -1,5 +1,6 @@
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
 
 export default function HomePage() {
-  redirect("/login");
+  // Automatically redirect anyone visiting localhost:3000 to the login page
+  redirect('/login');
 }

@@ -1,19 +1,18 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Logger } from '@nestjs/common';
 import { TasksService } from './tasks.service';
 import { CreateTaskDto } from './dto/create-task.dto';
-import { UpdateTaskDto } from './dto/update-task.dto';
 
 @Controller('tasks')
 export class TasksController {
+  private readonly logger = new Logger(TasksController.name);
+
   constructor(private readonly tasksService: TasksService) {}
+
+  @Post()
+  create(@Body() createTaskDto: CreateTaskDto) {
+    this.logger.log(`Incoming POST Request to create task: ${JSON.stringify(createTaskDto)}`);
+    return this.tasksService.create(createTaskDto);
+  }
 
   @Get()
   findAll() {
@@ -25,13 +24,9 @@ export class TasksController {
     return this.tasksService.findOne(id);
   }
 
-  @Post()
-  create(@Body() createTaskDto: CreateTaskDto) {
-    return this.tasksService.create(createTaskDto);
-  }
-
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateTaskDto: UpdateTaskDto) {
+  update(@Param('id') id: string, @Body() updateTaskDto: any) {
+    this.logger.log(`Incoming PATCH Request for task ${id}: ${JSON.stringify(updateTaskDto)}`);
     return this.tasksService.update(id, updateTaskDto);
   }
 

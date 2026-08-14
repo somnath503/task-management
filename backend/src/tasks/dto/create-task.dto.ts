@@ -28,4 +28,12 @@ export class CreateTaskDto {
   @IsString()
   @IsOptional()
   school?: string;
+
+  @IsString()
+  @IsOptional()
+  priority?: string;
+
+  @IsString()
+  @IsOptional()
+  status?: string;
 }

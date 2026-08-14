@@ -6,11 +6,17 @@ datasource db {
   provider = "sqlite"
 }
 
-// Handles the required Guest Login sessions
+// Handles the required Guest Login sessions and Profile Settings
 model User {
   id        String   @id @default(uuid())
   username  String   @unique
   role      String   @default("guest")
+  
+  // Added fields for the Settings Profile page
+  email     String?
+  fullName  String?
+  title     String?
+
   createdAt DateTime @default(now())
 }
 
@@ -26,4 +32,16 @@ model Task {
   school        String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  priority      String?   @default("Normal")
+  status        String?   @default("Backlog")
+}
+
+model Project {
+  id          String    @id @default(uuid())
+  name        String
+  priority    String?   @default("Normal")
+  lead        String?   // Stores the lead's name/initials
+  dueDate     DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 }
