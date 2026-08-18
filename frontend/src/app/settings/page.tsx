@@ -59,12 +59,16 @@ export default function SettingsPage() {
 
   // Handle Profile Save
   const handleSaveProfile = async () => {
+  // Handle Profile Save
+  const handleSaveProfile = async () => {
     setIsSaving(true);
     try {
-      const token = localStorage.getItem("token");
-      await api.patch("/users/me", profile, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      // Clean API call (token is handled by api.ts automatically)
+      await api.patch("/users/me", profile);
+      
+      // 🚀 THE MAGIC LINE: Tell the ProfileDropdown to re-fetch the data instantly!
+      window.dispatchEvent(new Event("profileUpdated"));
+      
     } catch (error) {
       console.error("Failed to save profile:", error);
     }

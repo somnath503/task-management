@@ -3,8 +3,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import axios from "axios";
 import { ChevronRight, Settings, LogOut } from "lucide-react";
+import api from "@/lib/api";
 
 export function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +20,7 @@ export function ProfileDropdown() {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("/users/me", {
+        const res = await api.get("/users/me", {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.data) setProfile(res.data);
@@ -30,7 +30,7 @@ export function ProfileDropdown() {
       }
     };
     fetchProfile();
-
+    window.addEventListener("profileUpdated", fetchProfile);
     // 2. Fetch the saved accent color for the animated avatar
     const colorOptions = [
       { name: "Blue", gradient: "from-blue-500 to-cyan-400" },
