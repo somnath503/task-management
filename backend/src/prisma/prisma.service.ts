@@ -1,17 +1,11 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { PrismaBetterSqlite3 } from '@prisma/adapter-better-sqlite3';
 
 @Injectable()
 export class PrismaService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor() {
-    // 1. Initialize the new SQLite adapter required by Prisma 7
-    const adapter = new PrismaBetterSqlite3({ 
-      url: process.env.DATABASE_URL || 'file:./dev.db' 
-    });
-    
-    // 2. Pass the adapter into the PrismaClient constructor
-    super({ adapter });
+    // Prisma automatically picks up your Neon DATABASE_URL from the environment
+    super(); 
   }
 
   async onModuleInit() {
