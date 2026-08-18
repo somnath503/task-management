@@ -5,9 +5,9 @@ import Link from "next/link";
 import { 
   ArrowLeft, Search, User, Sun, Palette, Save, CheckCircle2, Monitor, Moon, Pointer
 } from "lucide-react";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes"; 
+import api from "@/lib/api";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -44,7 +44,7 @@ export default function SettingsPage() {
       try {
         const token = localStorage.getItem("token");
         if (token) {
-          const res = await axios.get("API_BASE_URL/users/me", {
+          const res = await api.get("/users/me", {
             headers: { Authorization: `Bearer ${token}` }
           });
           // Merge incoming data, preserving defaults if a field is completely missing
@@ -62,7 +62,7 @@ export default function SettingsPage() {
     setIsSaving(true);
     try {
       const token = localStorage.getItem("token");
-      await axios.patch("API_BASE_URL/users/me", profile, {
+      await api.patch("/users/me", profile, {
         headers: { Authorization: `Bearer ${token}` }
       });
     } catch (error) {

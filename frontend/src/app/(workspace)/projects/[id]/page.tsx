@@ -3,10 +3,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import axios from "axios";
 import { 
   Lock, Unlock, PanelRight, Plus, Tag, SignalHigh, Circle, X, ArrowLeft, Trash2, Save, Edit2, CheckCircle2, Eye, Share, Settings, Check
 } from "lucide-react";
+import api from "@/lib/api";
 
 interface Project {
   id: string;
@@ -94,7 +94,7 @@ export default function ProjectDetailsPage() {
     const fetchProject = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`API_BASE_URL/projects/${projectId}`, {
+        const res = await api.get(`/projects/${projectId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setProject(res.data);
@@ -127,7 +127,7 @@ export default function ProjectDetailsPage() {
   const saveUpdateToBackend = async (payload: any) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.patch(`API_BASE_URL/projects/${projectId}`, payload, {
+      await api.patch(`/projects/${projectId}`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
     } catch (error) {
@@ -151,7 +151,7 @@ export default function ProjectDetailsPage() {
     if (!window.confirm("Are you sure you want to delete this project?")) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`API_BASE_URL/projects/${projectId}`, { headers: { Authorization: `Bearer ${token}` } });
+      await api.delete(`/projects/${projectId}`, { headers: { Authorization: `Bearer ${token}` } });
       router.push("/projects");
     } catch (error) { console.error("Failed to delete project:", error); }
   };
@@ -160,7 +160,7 @@ export default function ProjectDetailsPage() {
     try {
       const token = localStorage.getItem("token");
       const payload = { name: `${projectName} (Copy)`, priority: priority, dueDate: dueDateStr ? new Date(dueDateStr).toISOString() : undefined };
-      const res = await axios.post(`API_BASE_URL/projects`, payload, { headers: { Authorization: `Bearer ${token}` } });
+      const res = await api.post(`/projects`, payload, { headers: { Authorization: `Bearer ${token}` } });
       setIsSettingsOpen(false);
       router.push(`/projects/${res.data.id}`);
     } catch (error) { console.error("Failed to duplicate project:", error); }

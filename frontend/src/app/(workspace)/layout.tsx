@@ -3,11 +3,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
-import axios from "axios";
 import { ProfileDropdown } from "@/components/ProfileDropdown";
 import { 
   LayoutGrid, Folder, Search, Menu, X, PanelLeft, ChevronDown, ChevronRight, Plus
 } from "lucide-react";
+import api from "@/lib/api";
 
 export default function WorkspaceLayout({
   children,
@@ -56,7 +56,7 @@ export default function WorkspaceLayout({
       
       // Dynamic Submission: Project vs Task
       if (isProjectsPage) {
-        await axios.post("API_BASE_URL/projects", {
+        await api.post("/projects", {
           name: headerTaskTitle,
           priority: "Normal",
           status: "Planning"
@@ -64,7 +64,7 @@ export default function WorkspaceLayout({
           headers: { Authorization: `Bearer ${token}` }
         });
       } else {
-        await axios.post("API_BASE_URL/tasks", {
+        await api.post("/tasks", {
           fullName: headerTaskTitle,
           lastName: "Pending Details",
           status: selectedStatus 

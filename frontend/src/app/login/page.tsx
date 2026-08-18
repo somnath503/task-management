@@ -1,9 +1,8 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import { Triangle } from "lucide-react";
+import api from "@/lib/api";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -12,7 +11,7 @@ export default function LoginPage() {
   const handleGuestLogin = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post("API_BASE_URL/auth/guest");
+      const response = await api.post("/auth/guest");
       const { access_token } = response.data;
       localStorage.setItem("token", access_token);
       router.push("/tasks");

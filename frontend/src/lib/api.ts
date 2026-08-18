@@ -1,6 +1,5 @@
 import axios from "axios";
 
-// Automatically use the deployment URL or default to local development
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
 
 const api = axios.create({
@@ -12,6 +11,10 @@ const api = axios.create({
 
 api.interceptors.request.use(
   (config) => {
+    if (config.url && config.url.startsWith("API_BASE_URL")) {
+      config.url = config.url.replace("API_BASE_URL", "");
+    }
+
     if (typeof window !== "undefined") {
       const token = localStorage.getItem("token");
       if (token) {

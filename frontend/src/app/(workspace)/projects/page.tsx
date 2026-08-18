@@ -1,12 +1,12 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import Link from "next/link";
 import { 
   Plus, Trash2, Save, X, Search, 
   SignalHigh, Check, Filter, Columns, User, Edit2, ChevronRight, Share, List, LayoutGrid
 } from "lucide-react";
+import api from "@/lib/api";
 
 interface Project {
   id: string;
@@ -60,7 +60,7 @@ export default function ProjectsPage() {
     const fetchProjects = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("API_BASE_URL/projects", {
+        const res = await api.get("/projects", {
           headers: { Authorization: `Bearer ${token}` }
         });
         setProjects(res.data);
@@ -93,24 +93,29 @@ export default function ProjectsPage() {
     }
   };
 
-  // Save New Project
+// Save New Project
   const handleSaveInlineProject = async (defaultStatus: string = "Planning") => {
-    if (newProjectName.trim() === "") return;
+    if (!newProjectName || newProjectName.trim() === "") return;
+    
     const payload = {
-      name: newProjectName,
-      priority: newPriority,
-      lead: newLead || undefined,
-      dueDate: newDueDate ? new Date(newDueDate).toISOString() : undefined,
-      status: defaultStatus
+      name: newProjectName.trim(),
+      priority: newPriority || "Normal",
+      lead: newLead.trim() !== "" ? newLead.trim() : null,
+      dueDate: newDueDate ? new Date(newDueDate).toISOString() : null,
+      // Removed 'status' because it doesn't exist in the Project database model
     };
+
     try {
-      const token = localStorage.getItem("token");
-      const res = await axios.post("API_BASE_URL/projects", payload, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await api.post("/projects", payload);
       setProjects([res.data, ...projects]); 
-      setNewProjectName(""); setNewDueDate(""); setNewPriority("Normal"); setNewLead(""); setAddingSection(null);
-    } catch (error) { console.error("Failed to save project:", error); }
+      setNewProjectName(""); 
+      setNewDueDate(""); 
+      setNewPriority("Normal"); 
+      setNewLead(""); 
+      setAddingSection(null);
+    } catch (error: any) { 
+      console.error("Failed to save project:", error.response?.data || error.message); 
+    }
   };
 
   // Start Editing Project
@@ -130,7 +135,7 @@ export default function ProjectsPage() {
         lead: editLead || null,
         dueDate: editDueDate ? new Date(editDueDate).toISOString() : null,
       };
-      await axios.patch(`API_BASE_URL/projects/${editingProjectId}`, payload, { headers: { Authorization: `Bearer ${token}` } });
+      await api.patch(`/projects/${editingProjectId}`, payload, { headers: { Authorization: `Bearer ${token}` } });
       setProjects(projects.map(p => p.id === editingProjectId ? { ...p, name: editProjectName, priority: editPriority, lead: editLead || undefined, dueDate: editDueDate ? new Date(editDueDate).toISOString() : undefined } : p));
       setEditingProjectId(null);
     } catch (error) { console.error("Failed to update project:", error); }
@@ -140,7 +145,7 @@ export default function ProjectsPage() {
   const deleteProject = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`API_BASE_URL/projects/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      await api.delete(`/projects/${id}`, { headers: { Authorization: `Bearer ${token}` } });
       setProjects(projects.filter(p => p.id !== id));
     } catch (error) { console.error("Failed to delete project"); }
   };

@@ -20,7 +20,7 @@ export function ProfileDropdown() {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("API_BASE_URL/users/me", {
+        const res = await axios.get("/users/me", {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (res.data) setProfile(res.data);

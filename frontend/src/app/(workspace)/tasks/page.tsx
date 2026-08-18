@@ -1,12 +1,13 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+// import api from "axios";
 import Link from "next/link";
 import { 
   Plus, CheckCircle2, Circle, Trash2, Save, X, Search, 
   SignalHigh, List, LayoutGrid, Check, Edit2, Share, Filter, ChevronRight, User, Users, Calendar, Tag
 } from "lucide-react";
+import api from "@/lib/api";
 
 interface Task {
   id: string;
@@ -62,7 +63,7 @@ export default function TasksPage() {
     const fetchTasks = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("API_BASE_URL/tasks", {
+        const res = await api.get("/tasks", {
           headers: { Authorization: `Bearer ${token}` }
         });
         setTasks(res.data);
@@ -120,7 +121,7 @@ export default function TasksPage() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.post("API_BASE_URL/tasks", newTaskPayload, {
+      const res = await api.post("/tasks", newTaskPayload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTasks([...tasks, res.data]);
@@ -150,7 +151,7 @@ export default function TasksPage() {
         collaborators: editMember || null,
       };
 
-      await axios.patch(`API_BASE_URL/tasks/${editingTaskId}`, payload, {
+      await api.patch(`/tasks/${editingTaskId}`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -169,7 +170,7 @@ export default function TasksPage() {
     const newStatus = currentStatus === "Done" ? "Backlog" : "Done";
     try {
       const token = localStorage.getItem("token");
-      await axios.patch(`API_BASE_URL/tasks/${id}`, { status: newStatus }, {
+      await api.patch(`/tasks/${id}`, { status: newStatus }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTasks(tasks.map(t => t.id === id ? { ...t, status: newStatus } : t));
@@ -181,7 +182,7 @@ export default function TasksPage() {
   const deleteTask = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`API_BASE_URL/tasks/${id}`, {
+      await api.delete(`/tasks/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTasks(tasks.filter(t => t.id !== id));
