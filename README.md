@@ -1,5 +1,5 @@
 <div align="center">
-  <h1>AbleSpace Task Management</h1>
+  <h1>Task Management</h1>
   <p><strong>A highly scalable, full-stack project and task management ecosystem.</strong></p>
 
   <p>
@@ -21,7 +21,7 @@
   </p>
 </div>
 
-> **👋 Note to AbleSpace Reviewers:**
+> **👋 Note to Reviewers:**
 > Built with a focus on modern web standards, modular architecture, and edge-case handling. Below: architecture, setup, and engineering highlights.
 
 ---
@@ -64,7 +64,7 @@ Decoupled monorepo — client and server scale and deploy independently.
 
 ---
 
-## ✨ Engineering Highlights (For Reviewers)
+## ✨ Highlights
 
 🟢 **Strict Payload Validation** — Prisma schemas and NestJS controllers validate UUID formats, coerce `undefined` to `null`, and block non-schema fields — zero `500` errors in normal operation.
 
