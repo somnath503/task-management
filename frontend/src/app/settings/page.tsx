@@ -58,7 +58,7 @@ export default function SettingsPage() {
   }, []);
 
   // Handle Profile Save
-  const handleSaveProfile = async () => {
+  
   // Handle Profile Save
   const handleSaveProfile = async () => {
     setIsSaving(true);

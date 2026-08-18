@@ -19,30 +19,49 @@ export function ProfileDropdown() {
     // 1. Fetch updated profile data from your backend
     const fetchProfile = async () => {
       try {
-        const token = localStorage.getItem("token");
-        const res = await api.get("/users/me", {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (res.data) setProfile(res.data);
+        const res = await api.get("/users/me");
+        if (res.data) {
+          // 🚀 ADDED FALLBACKS to prevent null crashes
+          setProfile({
+            fullName: res.data.fullName || res.data.username || "Guest",
+            email: res.data.email || "guest@ablespace.com"
+          });
+        }
       } catch (error) {
         console.log("Could not fetch profile, using defaults.");
         setProfile({ fullName: "Guest", email: "guest@ablespace.com" });
       }
     };
+    
+    // Fetch immediately on mount
     fetchProfile();
+
+    // Listen for updates from the settings page
     window.addEventListener("profileUpdated", fetchProfile);
+
     // 2. Fetch the saved accent color for the animated avatar
-    const colorOptions = [
-      { name: "Blue", gradient: "from-blue-500 to-cyan-400" },
-      { name: "Purple", gradient: "from-purple-600 to-pink-500" },
-      { name: "Pink", gradient: "from-pink-500 to-rose-400" },
-      { name: "Orange", gradient: "from-orange-500 to-amber-400" },
-      { name: "Green", gradient: "from-emerald-500 to-teal-400" },
-    ];
-    const savedColor = localStorage.getItem("accentColor") || "Blue";
-    const gradient = colorOptions.find(c => c.name === savedColor)?.gradient || "from-blue-500 to-cyan-400";
-    setAccentGradient(gradient);
-  }, [isOpen]); // Re-run when opened so it always grabs the latest data if you just changed it in settings
+    const updateColor = () => {
+      const colorOptions = [
+        { name: "Blue", gradient: "from-blue-500 to-cyan-400" },
+        { name: "Purple", gradient: "from-purple-600 to-pink-500" },
+        { name: "Pink", gradient: "from-pink-500 to-rose-400" },
+        { name: "Orange", gradient: "from-orange-500 to-amber-400" },
+        { name: "Green", gradient: "from-emerald-500 to-teal-400" },
+      ];
+      const savedColor = localStorage.getItem("accentColor") || "Blue";
+      const gradient = colorOptions.find(c => c.name === savedColor)?.gradient || "from-blue-500 to-cyan-400";
+      setAccentGradient(gradient);
+    };
+
+    updateColor();
+    window.addEventListener("themeUpdated", updateColor);
+
+    // Cleanup listeners when component unmounts
+    return () => {
+      window.removeEventListener("profileUpdated", fetchProfile);
+      window.removeEventListener("themeUpdated", updateColor);
+    };
+  }, []);
 
   // Click outside to close the dropdown
   useEffect(() => {
@@ -60,6 +79,10 @@ export function ProfileDropdown() {
     router.push("/login");
   };
 
+  // 🚀 SAFETY CHECK: Ensure we always have a string before trying to get charAt(0)
+  const displayInitials = profile.fullName ? profile.fullName.charAt(0).toUpperCase() : "G";
+  const displayName = profile.fullName || "Guest";
+
   return (
     <div className="relative w-full" ref={dropdownRef}>
       
@@ -70,9 +93,9 @@ export function ProfileDropdown() {
       >
         <div className="flex items-center gap-3 overflow-hidden">
           <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-tr ${accentGradient} text-sm font-bold text-white shadow-sm`}>
-            {profile.fullName.charAt(0).toUpperCase()}
+            {displayInitials}
           </div>
-          <span className="truncate text-sm font-bold text-theme-text">{profile.fullName}</span>
+          <span className="truncate text-sm font-bold text-theme-text">{displayName}</span>
         </div>
         <ChevronRight 
           size={16} 
@@ -86,9 +109,9 @@ export function ProfileDropdown() {
           
           <div className="flex flex-col items-center border-b border-theme-border pb-4 pt-2">
             <div className={`mb-2 flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-tr ${accentGradient} text-xl font-bold text-white shadow-sm`}>
-               {profile.fullName.charAt(0).toUpperCase()}
+               {displayInitials}
             </div>
-            <span className="text-sm font-bold text-theme-text">{profile.fullName}</span>
+            <span className="text-sm font-bold text-theme-text">{displayName}</span>
             <span className="text-xs text-theme-muted">{profile.email}</span>
           </div>
           
