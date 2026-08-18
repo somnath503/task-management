@@ -9,6 +9,9 @@
     <a href="https://github.com/somnath503/task-management" target="_blank">
       <img src="https://img.shields.io/badge/GitHub-Repository-181717?style=for-the-badge&logo=github&logoColor=white" alt="GitHub Repository" />
     </a>
+    <a href="https://github.com/somnath503/task-management/actions" target="_blank">
+      <img src="https://img.shields.io/badge/CI%2FCD_Pipeline-Passing-success?style=for-the-badge&logo=githubactions&logoColor=white" alt="CI/CD Passing" />
+    </a>
   </p>
 
   <p>
@@ -73,6 +76,8 @@ Decoupled monorepo — client and server scale and deploy independently.
 🟣 **Centralized API Interceptor** — `api.ts` auto-injects the JWT on every request and resolves the base URL per environment.
 
 🟠 **Dynamic UI Engine** — Light/Dark/System theming via `next-themes`, plus a dynamic accent-color system (avatars, buttons, active states) stored in Local Storage.
+
+🟢 **DevOps & CI/CD Pipelines** — Implemented GitHub Actions for continuous integration. The pipeline automatically provisions an Ubuntu runner, sets up Node.js, installs dependencies, generates Prisma clients, and compiles the code to ensure production stability before deployment.
 
 ---
 
