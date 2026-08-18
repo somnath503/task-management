@@ -34,8 +34,8 @@ export default function SettingsPage() {
 
   // Load saved preferences on mount
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMounted(true); // Ensures themes render correctly on the client side
-
     const savedColor = localStorage.getItem("accentColor") || "Blue";
     setAccentColor(savedColor);
 
