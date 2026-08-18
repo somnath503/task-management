@@ -1,26 +1,34 @@
-import { Controller, Get, Patch, Body, Request, UseGuards } from '@nestjs/common';
-import { AuthGuard } from '@nestjs/passport'; // Import the standard AuthGuard
+import { Controller, Get, Patch, Body, Headers, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // 1. Apply the guard so NestJS extracts the token
-  @UseGuards(AuthGuard('jwt')) 
+  // Helper function to manually extract your Postgres UUID from the token
+  private extractUserId(authHeader: string): string {
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+      throw new UnauthorizedException('No token provided');
+    }
+    try {
+      const token = authHeader.split(' ')[1];
+      // Decode the payload part of the JWT
+      const payload = JSON.parse(Buffer.from(token.split('.')[1], 'base64').toString());
+      return payload.sub; // This is your real Postgres UUID!
+    } catch (error) {
+      throw new UnauthorizedException('Invalid token format');
+    }
+  }
+
   @Get('me')
-  getProfile(@Request() req: any) {
-    // 2. Remove the mock fallback. Use the real database UUID from the token.
-    const userId = req.user.sub; 
+  getProfile(@Headers('authorization') authHeader: string) {
+    const userId = this.extractUserId(authHeader);
     return this.usersService.getProfile(userId);
   }
 
-  // 1. Apply the guard here too
-  @UseGuards(AuthGuard('jwt')) 
   @Patch('me')
-  updateProfile(@Request() req: any, @Body() updateData: any) {
-    // 2. Use the real database UUID
-    const userId = req.user.sub;
+  updateProfile(@Headers('authorization') authHeader: string, @Body() updateData: any) {
+    const userId = this.extractUserId(authHeader);
     return this.usersService.updateProfile(userId, updateData);
   }
 }
