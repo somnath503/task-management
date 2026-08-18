@@ -60,7 +60,7 @@ export default function ProjectsPage() {
     const fetchProjects = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:3001/projects", {
+        const res = await axios.get("API_BASE_URL/projects", {
           headers: { Authorization: `Bearer ${token}` }
         });
         setProjects(res.data);
@@ -105,7 +105,7 @@ export default function ProjectsPage() {
     };
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.post("http://localhost:3001/projects", payload, {
+      const res = await axios.post("API_BASE_URL/projects", payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProjects([res.data, ...projects]); 
@@ -130,7 +130,7 @@ export default function ProjectsPage() {
         lead: editLead || null,
         dueDate: editDueDate ? new Date(editDueDate).toISOString() : null,
       };
-      await axios.patch(`http://localhost:3001/projects/${editingProjectId}`, payload, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.patch(`API_BASE_URL/projects/${editingProjectId}`, payload, { headers: { Authorization: `Bearer ${token}` } });
       setProjects(projects.map(p => p.id === editingProjectId ? { ...p, name: editProjectName, priority: editPriority, lead: editLead || undefined, dueDate: editDueDate ? new Date(editDueDate).toISOString() : undefined } : p));
       setEditingProjectId(null);
     } catch (error) { console.error("Failed to update project:", error); }
@@ -140,7 +140,7 @@ export default function ProjectsPage() {
   const deleteProject = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:3001/projects/${id}`, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.delete(`API_BASE_URL/projects/${id}`, { headers: { Authorization: `Bearer ${token}` } });
       setProjects(projects.filter(p => p.id !== id));
     } catch (error) { console.error("Failed to delete project"); }
   };

@@ -96,7 +96,7 @@ export default function TaskDetailsPage() {
     const fetchTask = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get(`http://localhost:3001/tasks/${taskId}`, {
+        const res = await axios.get(`API_BASE_URL/tasks/${taskId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         setTask(res.data);
@@ -132,7 +132,7 @@ export default function TaskDetailsPage() {
   const saveUpdateToBackend = async (payload: any) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.patch(`http://localhost:3001/tasks/${taskId}`, payload, {
+      await axios.patch(`API_BASE_URL/tasks/${taskId}`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
     } catch (error) {
@@ -152,7 +152,7 @@ export default function TaskDetailsPage() {
     if (!window.confirm("Are you sure you want to delete this task?")) return;
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:3001/tasks/${taskId}`, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.delete(`API_BASE_URL/tasks/${taskId}`, { headers: { Authorization: `Bearer ${token}` } });
       router.push("/tasks");
     } catch (error) { console.error("Failed to delete task:", error); }
   };
@@ -161,7 +161,7 @@ export default function TaskDetailsPage() {
     try {
       const token = localStorage.getItem("token");
       const payload = { fullName: `${taskTitle} (Copy)`, lastName: taskDesc, priority: priority, status: status, iepDue: endDateStr ? new Date(endDateStr).toISOString() : undefined };
-      const res = await axios.post(`http://localhost:3001/tasks`, payload, { headers: { Authorization: `Bearer ${token}` } });
+      const res = await axios.post(`API_BASE_URL/tasks`, payload, { headers: { Authorization: `Bearer ${token}` } });
       setIsSettingsOpen(false);
       router.push(`/tasks/${res.data.id}`);
     } catch (error) { console.error("Failed to duplicate task:", error); }
@@ -170,7 +170,7 @@ export default function TaskDetailsPage() {
   const handleArchiveTask = async () => {
     try {
       const token = localStorage.getItem("token");
-      await axios.patch(`http://localhost:3001/tasks/${taskId}`, { status: "Archived" }, { headers: { Authorization: `Bearer ${token}` } });
+      await axios.patch(`API_BASE_URL/tasks/${taskId}`, { status: "Archived" }, { headers: { Authorization: `Bearer ${token}` } });
       setStatus("Archived");
       logUpdate("archived the task");
       setIsSettingsOpen(false);

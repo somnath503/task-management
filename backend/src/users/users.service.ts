@@ -6,6 +6,24 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async getProfile(userId: string) {
+    // If JWT is not active, we grab the first user in the DB (or create a default one)
+    if (userId === 'mock-user-id') {
+      let guestUser = await this.prisma.user.findFirst();
+      
+      if (!guestUser) {
+        guestUser = await this.prisma.user.create({
+          data: {
+            username: 'Dexuser',
+            email: 'dexter@gmail.com',
+            fullName: 'Dexter',
+            title: 'Designer',
+            role: 'guest',
+          },
+        });
+      }
+      return guestUser;
+    }
+
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -26,7 +44,12 @@ export class UsersService {
   }
 
   async updateProfile(userId: string, updateData: any) {
-    // Whitelist the fields a user is allowed to update
+    let targetId = userId;
+    if (userId === 'mock-user-id') {
+      const guestUser = await this.prisma.user.findFirst();
+      if (guestUser) targetId = guestUser.id;
+    }
+
     const allowedUpdates = {
       ...(updateData.email && { email: updateData.email }),
       ...(updateData.fullName && { fullName: updateData.fullName }),
@@ -35,7 +58,7 @@ export class UsersService {
     };
 
     return this.prisma.user.update({
-      where: { id: userId },
+      where: { id: targetId },
       data: allowedUpdates,
       select: {
         id: true,

@@ -12,7 +12,7 @@ export default function LoginPage() {
   const handleGuestLogin = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post("http://localhost:3001/auth/guest");
+      const response = await axios.post("API_BASE_URL/auth/guest");
       const { access_token } = response.data;
       localStorage.setItem("token", access_token);
       router.push("/tasks");

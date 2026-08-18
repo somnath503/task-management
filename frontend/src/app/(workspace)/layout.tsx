@@ -56,7 +56,7 @@ export default function WorkspaceLayout({
       
       // Dynamic Submission: Project vs Task
       if (isProjectsPage) {
-        await axios.post("http://localhost:3001/projects", {
+        await axios.post("API_BASE_URL/projects", {
           name: headerTaskTitle,
           priority: "Normal",
           status: "Planning"
@@ -64,7 +64,7 @@ export default function WorkspaceLayout({
           headers: { Authorization: `Bearer ${token}` }
         });
       } else {
-        await axios.post("http://localhost:3001/tasks", {
+        await axios.post("API_BASE_URL/tasks", {
           fullName: headerTaskTitle,
           lastName: "Pending Details",
           status: selectedStatus 

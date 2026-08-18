@@ -62,7 +62,7 @@ export default function TasksPage() {
     const fetchTasks = async () => {
       try {
         const token = localStorage.getItem("token");
-        const res = await axios.get("http://localhost:3001/tasks", {
+        const res = await axios.get("API_BASE_URL/tasks", {
           headers: { Authorization: `Bearer ${token}` }
         });
         setTasks(res.data);
@@ -120,7 +120,7 @@ export default function TasksPage() {
 
     try {
       const token = localStorage.getItem("token");
-      const res = await axios.post("http://localhost:3001/tasks", newTaskPayload, {
+      const res = await axios.post("API_BASE_URL/tasks", newTaskPayload, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTasks([...tasks, res.data]);
@@ -150,7 +150,7 @@ export default function TasksPage() {
         collaborators: editMember || null,
       };
 
-      await axios.patch(`http://localhost:3001/tasks/${editingTaskId}`, payload, {
+      await axios.patch(`API_BASE_URL/tasks/${editingTaskId}`, payload, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -169,7 +169,7 @@ export default function TasksPage() {
     const newStatus = currentStatus === "Done" ? "Backlog" : "Done";
     try {
       const token = localStorage.getItem("token");
-      await axios.patch(`http://localhost:3001/tasks/${id}`, { status: newStatus }, {
+      await axios.patch(`API_BASE_URL/tasks/${id}`, { status: newStatus }, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTasks(tasks.map(t => t.id === id ? { ...t, status: newStatus } : t));
@@ -181,7 +181,7 @@ export default function TasksPage() {
   const deleteTask = async (id: string) => {
     try {
       const token = localStorage.getItem("token");
-      await axios.delete(`http://localhost:3001/tasks/${id}`, {
+      await axios.delete(`API_BASE_URL/tasks/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setTasks(tasks.filter(t => t.id !== id));
